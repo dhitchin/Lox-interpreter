@@ -19,7 +19,7 @@ namespace Lox
             this.enclosing = enclosing;
         }
 
-
+        //TODO: Handle trying to define a variable that is already defined.
         public void Define(string name, object value)
         {
             values.Add(name, value);
