@@ -1,0 +1,13 @@
+C:\Users\daniel.hitchings\source\repos\CraftingInterpreters\Lox\bin\Debug\netcoreapp3.1\Lox.exe
+C:\Users\daniel.hitchings\source\repos\CraftingInterpreters\Lox\bin\Debug\netcoreapp3.1\Lox.deps.json
+C:\Users\daniel.hitchings\source\repos\CraftingInterpreters\Lox\bin\Debug\netcoreapp3.1\Lox.runtimeconfig.json
+C:\Users\daniel.hitchings\source\repos\CraftingInterpreters\Lox\bin\Debug\netcoreapp3.1\Lox.runtimeconfig.dev.json
+C:\Users\daniel.hitchings\source\repos\CraftingInterpreters\Lox\bin\Debug\netcoreapp3.1\Lox.dll
+C:\Users\daniel.hitchings\source\repos\CraftingInterpreters\Lox\bin\Debug\netcoreapp3.1\Lox.pdb
+C:\Users\daniel.hitchings\source\repos\CraftingInterpreters\Lox\obj\Debug\netcoreapp3.1\Lox.csprojAssemblyReference.cache
+C:\Users\daniel.hitchings\source\repos\CraftingInterpreters\Lox\obj\Debug\netcoreapp3.1\Lox.AssemblyInfoInputs.cache
+C:\Users\daniel.hitchings\source\repos\CraftingInterpreters\Lox\obj\Debug\netcoreapp3.1\Lox.AssemblyInfo.cs
+C:\Users\daniel.hitchings\source\repos\CraftingInterpreters\Lox\obj\Debug\netcoreapp3.1\Lox.dll
+C:\Users\daniel.hitchings\source\repos\CraftingInterpreters\Lox\obj\Debug\netcoreapp3.1\Lox.pdb
+C:\Users\daniel.hitchings\source\repos\CraftingInterpreters\Lox\bin\Debug\netcoreapp3.1\ExpressionGenerator.tt
+C:\Users\daniel.hitchings\source\repos\CraftingInterpreters\Lox\bin\Debug\netcoreapp3.1\StatementGenerator.tt
