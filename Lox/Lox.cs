@@ -4,29 +4,14 @@ using System.IO;
 
 namespace Lox
 {
-    class Lox
+    static class Lox
     {
         private static readonly Interpreter interpreter = new Interpreter();
 
         static bool hadError = false;
         static bool hadRuntimeError = false;
 
-        static void Main(string[] args)
-        {
-            if (args.Length > 1)
-            {
-                Console.WriteLine("Usage: lox [script]");
-                System.Environment.Exit(64);
-            } else if (args.Length == 1)
-            {
-                RunFile(args[0]);
-            } else
-            {
-                RunPrompt();
-            }
-        }
-
-        private static void RunFile(string path)
+        public static void RunFile(string path)
         {
             StreamReader sr = new StreamReader(path);
 
@@ -36,7 +21,7 @@ namespace Lox
             if (hadRuntimeError) System.Environment.Exit(70);
         }
 
-        private static void RunPrompt()
+        public static void RunPrompt()
         {
             for (; ; )
             {

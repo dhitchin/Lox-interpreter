@@ -3,15 +3,16 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <StartupObject>Lox.ConsoleApp</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="StatementGenerator.tt">
+    <None Update="Tools\StatementGenerator.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LastGenOutput>StatementGenerator.cs</LastGenOutput>
       <Generator>TextTemplatingFileGenerator</Generator>
     </None>
-    <None Update="ExpressionGenerator.tt">
+    <None Update="Tools\ExpressionGenerator.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ExpressionGenerator.cs</LastGenOutput>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -23,12 +24,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="ExpressionGenerator.cs">
+    <Compile Update="Tools\ExpressionGenerator.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>ExpressionGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Update="StatementGenerator.cs">
+    <Compile Update="Tools\StatementGenerator.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>StatementGenerator.tt</DependentUpon>
