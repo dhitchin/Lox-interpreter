@@ -4,21 +4,23 @@ using System.IO;
 
 namespace Lox
 {
-    static class Lox
+    public static class Lox
     {
         private static readonly Interpreter interpreter = new Interpreter();
 
         static bool hadError = false;
         static bool hadRuntimeError = false;
 
-        public static void RunFile(string path)
+        public static int RunFile(string path)
         {
             StreamReader sr = new StreamReader(path);
 
             Run(sr.ReadToEnd());
 
-            if (hadError) System.Environment.Exit(65);
-            if (hadRuntimeError) System.Environment.Exit(70);
+            if (hadError) return 65;
+            if (hadRuntimeError) return 70;
+
+            return 0;
         }
 
         public static void RunPrompt()

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Lox
 {
-    class RuntimeError : LoxError
+    public class RuntimeError : LoxError
     {
         public readonly Token token;
         private readonly string _msg;

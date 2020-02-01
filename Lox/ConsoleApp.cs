@@ -17,7 +17,7 @@ namespace Lox
             }
             else if (args.Length == 1)
             {
-                Lox.RunFile(args[0]);
+                System.Environment.Exit(Lox.RunFile(args[0]));
             }
             else
             {
