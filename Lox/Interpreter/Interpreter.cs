@@ -7,6 +7,7 @@ namespace Lox
     class Interpreter : Expr.IVisitor<object>, Stmt.IVisitor<object>
     {
         private Environment _environment;
+        private readonly Dictionary<Expr, int> _locals = new Dictionary<Expr, int>();
 
         public Environment Globals { get; }
 
@@ -38,6 +39,11 @@ namespace Lox
             }
         }
 
+        public void Resolve(Expr expr, int depth)
+        {
+            _locals.Add(expr, depth);
+        }
+
 
         private void Execute(Stmt stmt)
         {
@@ -49,7 +55,15 @@ namespace Lox
         {
             object value = Evaluate(_assign.value);
 
-            _environment.Assign(_assign.name, value);
+            if (_locals.TryGetValue(_assign, out int distance))
+            {
+                _environment.AssignAt(distance, _assign.name, value);
+            }
+            else
+            {
+                Globals.Assign(_assign.name, value);
+            }
+
             return value;
         }
 
@@ -224,7 +238,19 @@ namespace Lox
 
          object Expr.IVisitor<object>.Visit(Expr.Variable _variable)
         {
-            return _environment.Get(_variable.name);
+            return LookUpVariable(_variable.name, _variable);
+        }
+
+        private object LookUpVariable(Token name, Expr expr)
+        {
+            if (_locals.TryGetValue(expr, out int distance))
+            {
+                return _environment.GetAt(distance, name.lexeme);
+            }
+            else
+            {
+                return Globals.Get(name);
+            }
         }
 
         private object Evaluate(Expr expr)

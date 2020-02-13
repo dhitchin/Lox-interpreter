@@ -3,4 +3,7 @@
 // Project-level suppressions either have no target or are given
 // a specific target and scoped to a namespace, type, member, etc.
 
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "<Pending>", Scope = "type", Target = "~T:Lox.Expr")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1034:Nested types should not be visible", 
+    Justification = "<Pending>", Scope = "type", Target = "~T:Lox.Expr")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1034:Nested types should not be visible", 
+    Justification = "<Pending>", Scope = "type", Target = "~T:Lox.Stmt")]

@@ -29,4 +29,10 @@ namespace Lox
         EOF
     }
 
+    public enum FunctionType
+    {
+        NONE,
+        FUNCTION
+    }
+
 }
