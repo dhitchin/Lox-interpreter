@@ -9,6 +9,5 @@ Some changes include:
   * Addition of '++' and '--' postfix operators
 
 TODO:
- * Resolving and binding
- * Classes
  * Inheritance
+ * Additional built-in functions
