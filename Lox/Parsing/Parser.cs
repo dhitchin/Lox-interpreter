@@ -37,8 +37,10 @@ namespace Lox
         {
             try
             {
-                if (Match(TokenType.VAR)) return VarDeclaration();
                 if (Match(TokenType.FUN)) return Function("function");
+                if (Match(TokenType.CLASS)) return ClassDeclaration();
+                if (Match(TokenType.VAR)) return VarDeclaration();
+                
 
                 return Statement();
             } catch (ParseError error)
@@ -47,6 +49,22 @@ namespace Lox
                 if (error is null) return null;
                 return null;
             }
+        }
+
+        private Stmt ClassDeclaration()
+        {
+            Token name = Consume(TokenType.IDENTIFIER, "Expect class name.");
+            Consume(TokenType.LEFT_BRACE, "Expect '{' before class body.");
+
+            List<Stmt.Function> methods = new List<Stmt.Function>();
+            while (!Check(TokenType.RIGHT_BRACE) && !IsAtEnd())
+            {
+                methods.Add((Stmt.Function)Function("method"));
+            }
+
+            Consume(TokenType.RIGHT_BRACE, "Expect '}' after class body.");
+
+            return new Stmt.Class(name, methods);
         }
 
         private Stmt Function(string kind)
@@ -252,10 +270,14 @@ namespace Lox
                 Token equal = Previous();
                 Expr value = Assignment();
 
-                if (expr is Expr.Variable)
+                if (expr is Expr.Variable v)
                 {
-                    Token name = ((Expr.Variable)expr).name;
+                    Token name = v.name;
                     return new Expr.Assign(name, value);
+                }
+                else if (expr is Expr.Get get)
+                {
+                    return new Expr.Set(get.target, get.name, value);
                 }
 
                 Error(equal, "Invalid assignment target.");
@@ -384,6 +406,11 @@ namespace Lox
                 {
                     expr = FinishCall(expr);
                 }
+                else if (Match(TokenType.DOT))
+                {
+                    Token name = Consume(TokenType.IDENTIFIER, "Expect property name after '.'.");
+                    expr = new Expr.Get(expr, name);
+                }
                 else
                 {
                     break;
@@ -422,6 +449,8 @@ namespace Lox
             {
                 return new Expr.Literal(Previous().literal);
             }
+
+            if (Match(TokenType.THIS)) return new Expr.This(Previous());
 
             if (Match(TokenType.IDENTIFIER))
             {

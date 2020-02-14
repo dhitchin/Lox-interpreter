@@ -9,6 +9,7 @@ namespace Lox
 	public interface IVisitor<T> 
 		{
             T Visit(Block _block);
+            T Visit(Class _class);
             T Visit(Expression _expression);
             T Visit(Function _function);
             T Visit(If _if);
@@ -25,6 +26,23 @@ namespace Lox
             public Block(List<Stmt> statements)
             {
                 this.statements = statements;
+            }
+             
+            public override T Accept<T>(IVisitor<T> visitor)
+            {
+                return visitor.Visit(this);
+            }
+        }
+
+        public class Class : Stmt
+        {
+            public Token name;
+            public List<Stmt.Function> methods;
+             
+            public Class(Token name, List<Stmt.Function> methods)
+            {
+                this.name = name;
+                this.methods = methods;
             }
              
             public override T Accept<T>(IVisitor<T> visitor)

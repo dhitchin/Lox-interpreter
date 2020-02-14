@@ -19,6 +19,7 @@ using System.Collections.Generic;
 
 	var expressions = new [] {
 		new Exp("Block", new Arg(STMT_LIST, "statements")),
+		new Exp("Class", new Arg(TOKEN_TYPE, "name"), new Arg("List<Stmt.Function>", "methods")),
 		new Exp("Expression", new Arg(EXPRESSION, "expression")),
 		new Exp("Function", new Arg(TOKEN_TYPE, "name"), new Arg(TOKEN_LIST, "parameters"), new Arg(STMT_LIST, "body")),
 		new Exp("If", new Arg(EXPRESSION, "condition"), new Arg(BASE_TYPE, "thenBranch"), new Arg(BASE_TYPE, "elseBranch")),

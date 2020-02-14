@@ -31,8 +31,16 @@ namespace Lox
 
     public enum FunctionType
     {
-        NONE,
-        FUNCTION
+        FUNCTION,
+        INITIALIZER,
+        METHOD,
+        NONE
+    }
+
+    public enum ClassType
+    {
+        CLASS,
+        NONE
     }
 
 }

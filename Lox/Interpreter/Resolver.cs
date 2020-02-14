@@ -8,7 +8,8 @@ namespace Lox
     {
         private readonly Interpreter _interpreter;
         private readonly Stack<Dictionary<string, bool>> _scopes = new Stack<Dictionary<string, bool>>();
-        private FunctionType currentFunction = FunctionType.NONE;
+        private FunctionType _currentFunction = FunctionType.NONE;
+        private ClassType _currentClass = ClassType.NONE;
 
         public Resolver(Interpreter interpreter)
         {
@@ -56,8 +57,8 @@ namespace Lox
 
         private void ResolveFunction(Stmt.Function function, FunctionType type)
         {
-            FunctionType enclosingFunction = currentFunction;
-            currentFunction = type;
+            FunctionType enclosingFunction = _currentFunction;
+            _currentFunction = type;
             
             BeginScope();
             foreach (Token param in function.parameters)
@@ -69,7 +70,7 @@ namespace Lox
             Resolve(function.body);
             EndScope();
 
-            currentFunction = enclosingFunction;
+            _currentFunction = enclosingFunction;
         }
 
         private void Declare(Token name)
@@ -120,6 +121,29 @@ namespace Lox
             return null;
         }
 
+        public object Visit(Stmt.Class _class)
+        {
+            ClassType enclosingClass = _currentClass;
+            _currentClass = ClassType.CLASS;
+
+            Declare(_class.name);
+            Define(_class.name);
+
+            BeginScope();
+            _scopes.Peek().Add("this", true);
+
+            foreach (Stmt.Function method in _class.methods)
+            {
+                FunctionType declaration = (method.name.lexeme.Equals("init")) ? FunctionType.INITIALIZER : FunctionType.METHOD;
+                ResolveFunction(method, declaration);
+            }
+
+            EndScope();
+
+            _currentClass = enclosingClass;
+            return null;
+        }
+
         public object Visit(Stmt.Expression _expression)
         {
             Resolve(_expression.expression);
@@ -155,13 +179,17 @@ namespace Lox
 
         public object Visit(Stmt.Return _return)
         {
-            if (currentFunction == FunctionType.NONE)
+            if (_currentFunction == FunctionType.NONE)
             {
                 Lox.Error(_return.keyword, "Cannot return from top-level code.");
             }
 
             if  (_return.value != null)
             {
+                if (_currentFunction == FunctionType.INITIALIZER)
+                {
+                    Lox.Error(_return.keyword, "Cannot return a value from an initializer.");
+                }
                 Resolve(_return.value);
             }
 
@@ -220,7 +248,9 @@ namespace Lox
 
         public object Visit(Expr.Get _get)
         {
-            throw new NotImplementedException();
+            Resolve(_get.target);
+
+            return null;
         }
 
         public object Visit(Expr.Grouping _grouping)
@@ -245,7 +275,10 @@ namespace Lox
 
         public object Visit(Expr.Set _set)
         {
-            throw new NotImplementedException();
+            Resolve(_set.value);
+            Resolve(_set.target);
+
+            return null;
         }
 
         public object Visit(Expr.Super _super)
@@ -255,7 +288,9 @@ namespace Lox
 
         public object Visit(Expr.This _this)
         {
-            throw new NotImplementedException();
+            ResolveLocal(_this, _this.keyword);
+
+            return null;
         }
 
         public object Visit(Expr.Prefix _prefix)

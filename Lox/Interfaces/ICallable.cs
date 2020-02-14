@@ -6,7 +6,7 @@ namespace Lox
 {
     interface ICallable
     {
-        public int Arity { get; set; }
+        public int Arity { get; }
         object Call(Interpreter interpreter, List<object> arguments);
     }
 }

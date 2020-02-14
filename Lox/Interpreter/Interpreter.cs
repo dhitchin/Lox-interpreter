@@ -150,7 +150,13 @@ namespace Lox
 
          object Expr.IVisitor<object>.Visit(Expr.Get _get)
         {
-            throw new NotImplementedException();
+            object target = Evaluate(_get.target);
+            if (target is LoxInstance)
+            {
+                return ((LoxInstance)target).Get(_get.name);
+            }
+
+            throw new RuntimeError(_get.name, "Only instances have properties.");
         }
 
          object Expr.IVisitor<object>.Visit(Expr.Grouping _grouping)
@@ -180,7 +186,17 @@ namespace Lox
 
          object Expr.IVisitor<object>.Visit(Expr.Set _set)
         {
-            throw new NotImplementedException();
+            object target = Evaluate(_set.target);
+
+            if (!(target is LoxInstance))
+            {
+                throw new RuntimeError(_set.name, "Only instances have fields.");
+            }
+
+            object value = Evaluate(_set.value);
+            ((LoxInstance)target).Set(_set.name, value);
+
+            return value;
         }
 
          object Expr.IVisitor<object>.Visit(Expr.Super _super)
@@ -190,7 +206,7 @@ namespace Lox
 
          object Expr.IVisitor<object>.Visit(Expr.This _this)
         {
-            throw new NotImplementedException();
+            return LookUpVariable(_this.keyword, _this);
         }
 
          object Expr.IVisitor<object>.Visit(Expr.Prefix _prefix)
@@ -356,15 +372,16 @@ namespace Lox
 
             try
             {
-                this._environment = environment;
+                _environment = environment;
 
                 foreach (Stmt statement in statements)
                 {
                     Execute(statement);
                 }
-            } finally
+            } 
+            finally
             {
-                this._environment = previous;
+                _environment = previous;
             }
         }
 
@@ -380,8 +397,9 @@ namespace Lox
 
         object Stmt.IVisitor<object>.Visit(Stmt.Function _function)
         {
-            LoxFunction function = new LoxFunction(_function, _environment);
+            LoxFunction function = new LoxFunction(_function, _environment, false);
             _environment.Define(_function.name.lexeme, function);
+
             return null;
         }
 
@@ -392,6 +410,24 @@ namespace Lox
             if (_return.value != null) value = Evaluate(_return.value);
 
             throw new Return(value);
+        }
+
+        object Stmt.IVisitor<object>.Visit(Stmt.Class _class)
+        {
+            _environment.Define(_class.name.lexeme, null);
+
+            Dictionary<string, LoxFunction> methods = new Dictionary<string, LoxFunction>();
+            foreach (Stmt.Function method in _class.methods)
+            {
+                LoxFunction function = new LoxFunction(method, _environment, method.name.lexeme.Equals("init"));
+                methods.Add(method.name.lexeme, function);
+            }
+
+
+            LoxClass klass = new LoxClass(_class.name.lexeme, methods);
+            _environment.Assign(_class.name, klass);
+
+            return null;
         }
     }
 }

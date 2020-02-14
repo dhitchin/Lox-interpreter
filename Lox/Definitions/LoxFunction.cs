@@ -6,39 +6,54 @@ namespace Lox
 {
     class LoxFunction : ICallable
     {
-        private readonly Stmt.Function declaration;
-        private readonly Environment closure;
+        private readonly Stmt.Function _declaration;
+        private readonly Environment _closure;
+        private readonly bool _isInitializer;
 
-        public LoxFunction(Stmt.Function declaration, Environment closure)
+        public LoxFunction(Stmt.Function declaration, Environment closure, bool isInitializer)
         {
-            this.closure = closure;
-            this.declaration = declaration;
+            _closure = closure;
+            _declaration = declaration;
+            _isInitializer = isInitializer;
         }
 
-        public int Arity { get => declaration.parameters.Count; set => throw new NotImplementedException(); }
+        public int Arity { get => _declaration.parameters.Count; }
 
         public object Call(Interpreter interpreter, List<object> arguments)
         {
-            Environment environment = new Environment(closure);
+            Environment environment = new Environment(_closure);
 
-            for (int i = 0; i<declaration.parameters.Count; i++)
+            for (int i = 0; i<_declaration.parameters.Count; i++)
             {
-                environment.Define(declaration.parameters[i].lexeme, arguments[i]);
+                environment.Define(_declaration.parameters[i].lexeme, arguments[i]);
             }
 
             try
             {
-                interpreter.ExecuteBlock(declaration.body, environment);
+                interpreter.ExecuteBlock(_declaration.body, environment);
             } catch(Return returnValue)
             {
+                if (_isInitializer) return _closure.GetAt(0, "this");
+
                 return returnValue.Value;
             }
+
+            if (_isInitializer) return _closure.GetAt(0, "this");
+
             return null;
+        }
+
+        public LoxFunction Bind(LoxInstance instance)
+        {
+            Environment environment = new Environment(_closure);
+            environment.Define("this", instance);
+
+            return new LoxFunction(_declaration, environment, _isInitializer);
         }
 
         public override string ToString()
         {
-            return "<fn " + declaration.name.lexeme + ">";
+            return "<fn " + _declaration.name.lexeme + ">";
         }
     }
 }
