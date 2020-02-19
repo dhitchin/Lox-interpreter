@@ -40,6 +40,7 @@ namespace Lox
     public enum ClassType
     {
         CLASS,
+        SUBCLASS,
         NONE
     }
 

@@ -201,7 +201,20 @@ namespace Lox
 
          object Expr.IVisitor<object>.Visit(Expr.Super _super)
         {
-            throw new NotImplementedException();
+            int distance = _locals[_super];
+            LoxClass superclass = (LoxClass)_environment.GetAt(distance, "super");
+
+            // "this" is always one level nearer than "super"'s environment.
+            LoxInstance _object = (LoxInstance)_environment.GetAt(distance - 1, "this");
+
+            LoxFunction method = superclass.FindMethod(_super.method.lexeme);
+
+            if (method == null)
+            {
+                throw new RuntimeError(_super.method, "Undefined property '" + _super.method.lexeme + "'.");
+            }
+
+            return method.Bind(_object);
         }
 
          object Expr.IVisitor<object>.Visit(Expr.This _this)
@@ -414,7 +427,22 @@ namespace Lox
 
         object Stmt.IVisitor<object>.Visit(Stmt.Class _class)
         {
+            object superclass = null;
+            if (_class.superclass != null)
+            {
+                superclass = Evaluate(_class.superclass);
+                if (!(superclass is LoxClass)) {
+                    throw new RuntimeError(_class.superclass.name, "Superclass must be a class.");
+                }
+            }
+
             _environment.Define(_class.name.lexeme, null);
+
+            if (_class.superclass != null)
+            {
+                _environment = new Environment(_environment);
+                _environment.Define("super", superclass);
+            }
 
             Dictionary<string, LoxFunction> methods = new Dictionary<string, LoxFunction>();
             foreach (Stmt.Function method in _class.methods)
@@ -423,8 +451,10 @@ namespace Lox
                 methods.Add(method.name.lexeme, function);
             }
 
+            LoxClass klass = new LoxClass(_class.name.lexeme, (LoxClass)superclass, methods);
 
-            LoxClass klass = new LoxClass(_class.name.lexeme, methods);
+            if (superclass != null) _environment = _environment.enclosing;
+
             _environment.Assign(_class.name, klass);
 
             return null;

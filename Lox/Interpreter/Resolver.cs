@@ -129,6 +129,23 @@ namespace Lox
             Declare(_class.name);
             Define(_class.name);
 
+            if ((_class.superclass != null) && 
+                _class.name.lexeme.Equals(_class.superclass.name.lexeme)) {
+                Lox.Error(_class.superclass.name, "A class cannot inherit from itself.");
+            }
+
+            if (_class.superclass != null)
+            {
+                _currentClass = ClassType.SUBCLASS;
+                Resolve(_class.superclass);
+            }
+
+            if (_class.superclass != null)
+            {
+                BeginScope();
+                _scopes.Peek().Add("super", true);
+            }
+
             BeginScope();
             _scopes.Peek().Add("this", true);
 
@@ -139,6 +156,8 @@ namespace Lox
             }
 
             EndScope();
+
+            if (_class.superclass != null) EndScope();
 
             _currentClass = enclosingClass;
             return null;
@@ -283,7 +302,19 @@ namespace Lox
 
         public object Visit(Expr.Super _super)
         {
-            throw new NotImplementedException();
+            if (_currentClass == ClassType.NONE)
+            {
+                Lox.Error(_super.keyword, "Cannot use 'super' outside of a class.");
+            } 
+            else if (_currentClass != ClassType.SUBCLASS)
+            {
+                Lox.Error(_super.keyword, "Cannot use 'super' in a class with no superclass.");
+            }
+            
+            
+            ResolveLocal(_super, _super.keyword);
+
+            return null;
         }
 
         public object Visit(Expr.This _this)
