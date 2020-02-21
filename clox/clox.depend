@@ -1,0 +1,68 @@
+# depslib dependency file v1.0
+1582323084 source:c:\users\daniel.hitchings\source\repos\clox\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"common.h"
+	"chunk.h"
+	"debug.h"
+	"vm.h"
+
+1582318518 c:\users\daniel.hitchings\source\repos\clox\common.h
+	<stdbool.h>
+	<stddef.h>
+	<stdint.h>
+	<stdio.h>
+
+1582317575 source:c:\users\daniel.hitchings\source\repos\clox\chunk.c
+	<stdlib.h>
+	"chunk.h"
+	"memory.h"
+
+1582319230 c:\users\daniel.hitchings\source\repos\clox\chunk.h
+	"common.h"
+	"value.h"
+
+1581708319 c:\users\daniel.hitchings\source\repos\clox\memory.h
+
+1581708160 source:c:\users\daniel.hitchings\source\repos\clox\memory.c
+	<stdlib.h>
+	"common.h"
+	"memory.h"
+
+1581708666 c:\users\daniel.hitchings\source\repos\clox\debug.h
+	"chunk.h"
+
+1582319496 source:c:\users\daniel.hitchings\source\repos\clox\debug.c
+	<stdio.h>
+	"debug.h"
+	"value.h"
+
+1581710461 source:c:\users\daniel.hitchings\source\repos\clox\value.c
+	<stdio.h>
+	"memory.h"
+	"value.h"
+
+1581710417 c:\users\daniel.hitchings\source\repos\clox\value.h
+	"common.h"
+
+1582320543 c:\users\daniel.hitchings\source\repos\clox\vm.h
+	"chunk.h"
+	"value.h"
+
+1582321109 source:c:\users\daniel.hitchings\source\repos\clox\compiler.c
+	<stdio.h>
+	"common.h"
+	"compiler.h"
+	"scanner.h"
+
+1582320649 c:\users\daniel.hitchings\source\repos\clox\compiler.h
+
+1582321220 c:\users\daniel.hitchings\source\repos\clox\scanner.h
+
+1582323056 source:c:\users\daniel.hitchings\source\repos\clox\scanner.c
+	<stdio.h>
+	<string.h>
+	"common.h"
+	"scanner.h"
+
