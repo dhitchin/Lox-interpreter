@@ -345,7 +345,7 @@ namespace Lox
 
         public object Visit(Expr.Variable _variable)
         {
-            if (_scopes.Count != 0 && !_scopes.Peek()[_variable.name.lexeme])
+            if (_scopes.Count != 0 && _scopes.Peek().TryGetValue(_variable.name.lexeme, out bool value) && value == false)
             {
                 Lox.Error(_variable.name, "Cannot read local variable in its own initializer.");
             }
