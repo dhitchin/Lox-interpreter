@@ -43,11 +43,12 @@ namespace Lox
 
         private void ResolveLocal(Expr expr, Token name)
         {
-            for (int i = _scopes.Count - 1; i >=0; i--)
+            var scopesArray = _scopes.ToArray();
+            for (int i = 0; i < scopesArray.Length; i++)
             {
-                if (_scopes.ToArray()[i].ContainsKey(name.lexeme))
+                if (scopesArray[i].ContainsKey(name.lexeme))
                 {
-                    _interpreter.Resolve(expr, _scopes.Count - 1 - i);
+                    _interpreter.Resolve(expr, i);
                     return;
                 }
             }
